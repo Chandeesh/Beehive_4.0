@@ -32,6 +32,7 @@ export class ConfirmUserComponent implements OnInit {
       this.router.navigate(['/loginuser']);
     } else {
       this.toaster.showToast('Failure', 'Token Expired', 'failure');
+      this.router.navigate(['/adduser']);
     }
   }
 

@@ -22,7 +22,7 @@
           <input type="password" [(ngModel)]="userlogin.password" class="form-control" id="Password" name="password"
             placeholder="Enter your name" required #name="ngModel">
         </div>
-        <div [hidden]="!name.pristine" class="alert alert-danger">Name is required</div>
+        <div [hidden]="!name.pristine" class="alert alert-danger">Password is required</div>
         <button type="submit" [disabled]="!userForm.form.valid" class="btn btn-info">Submit</button>
       </form>
     </div>

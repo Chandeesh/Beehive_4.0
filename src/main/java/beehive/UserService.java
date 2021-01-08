@@ -2,6 +2,9 @@ package beehive;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -67,13 +70,18 @@ public class UserService implements Services {
 		while (itr.hasNext()) {
 			UserRegister udata = itr.next();
 			if (udata.getToken().equals(token)) {
-				System.out.println("Token Matches");
-				udata.setEnabled(true);
-				reps.save(udata);
-				status = true;
-				break;
+				
+					String date = udata.getTime();
+					System.out.println(getHours(date));
+					if (getHours(date) < 24) {
+						udata.setEnabled(true);
+						reps.save(udata);
+						status = true;
+						break;
+					}
 			}
 		}
+		
 		if (status) {
 			return ResponseEntity.status(200).build();
 		} else {
@@ -89,8 +97,10 @@ public class UserService implements Services {
 		itr = local.iterator();
 		while (itr.hasNext()) {
 			UserRegister existingdata = itr.next();
-			if (existingdata.getEmail().equals(userdata.getEmail())) {
+			if (existingdata.getEmail().equals(userdata.getEmail()) && existingdata.isEnabled()) {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			} else if(existingdata.getEmail().equals(userdata.getEmail()) && getHours(existingdata.getTime())>24){
+				reps.delete(existingdata);
 			}
 		}
 		String token = UUID.randomUUID().toString();
@@ -101,10 +111,10 @@ public class UserService implements Services {
 		data.setEnabled(false);
 		data.setTime(sdf.format(timestamp));
 		data.setToken(token);
-		reps.save(data);
 		String url = "http://localhost:8080/confirmuser?token=" + token;
 		try {
 			sendMail(url, data);
+			reps.save(data);
 			return ResponseEntity.status(200).build();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -121,6 +131,7 @@ public class UserService implements Services {
 			message.setText(url);
 			Transport.send(message);
 		} catch (MessagingException ex) {
+			throw new NullPointerException();
 		}
 	}
 
@@ -140,5 +151,20 @@ public class UserService implements Services {
 		});
 		session.setDebug(true);
 		return session;
+	}
+
+	public long getHours(String date) {
+		try {
+			Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+			Date d1 = sdf.parse(sdf.format(timestamp));
+			Date d2 = sdf.parse(date);
+			long difference_In_Time = d1.getTime() - d2.getTime();
+			long difference_In_Days = (difference_In_Time / (1000 * 60 * 60 * 24)) % 365;
+			long difference_In_Hours = (difference_In_Time / (1000 * 60 * 60)) % 24;
+			return difference_In_Days * 24 + difference_In_Hours;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
 	}
 }
