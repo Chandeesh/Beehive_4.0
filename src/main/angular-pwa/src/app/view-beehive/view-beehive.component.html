@@ -1,21 +1,25 @@
-<div class="container">
-  <div class="col-md-6 col-md-offset-3 loginBox">
-    Welcome, {{id}}
-    <a href="javascript:void(0);" (click)="logout()">Logout</a>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-12">
-    <div class="card bg-dark my-5">
-      <div class="card-body">
-        <h2 class="card-title text-center text-white py-3">Click to display data</h2>
-        <ul class="text-center list-inline py-3">
-          <li class="list-inline-item"><a class="btn btn-info" (click)="weight()">Weight</a></li>
-          <li class="list-inline-item"><a class="btn btn-info" (click)="yield()">Yield</a></li>
-          <li class="list-inline-item"><a class="btn btn-info" (click)="temp()">Temperature</a></li>
-        </ul>
+<!-- ======= Header ======= -->
+<header id="header" class="fixed-top d-flex align-items-center">
+  <div class="container">
+    <div class="header-container d-flex align-items-center">
+      <div class="logo mr-auto">
+        <h1 class="text-light"><a href="index.html"><span>Beehive</span></a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
       </div>
-    </div>
-    <router-outlet></router-outlet>
+      <nav class="nav-menu d-none d-lg-block">
+        <ul>
+          <li class="get-started"><a routerLink="" (click)="weight()">Weight</a></li>
+          <li class="get-started"><a routerLink="" (click)="yield()">Yield</a></li>
+          <li class="get-started"><a routerLink="" (click)="temp()">Temperature</a></li>
+          <li class="get-started"><a routerLink="" (click)="logout()">Logout</a></li>
+        </ul>
+      </nav><!-- .nav-menu -->
+    </div><!-- End Header Container -->
   </div>
-</div>
+</header><!-- End Header -->
+
+<!-- ======= Hero Section ======= -->
+<section id="hero" class="d-flex align-items-center">
+  <router-outlet></router-outlet>
+</section><!-- End Hero -->

@@ -3,6 +3,8 @@ package beehive;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,6 +16,7 @@ import beehive.model.User;
 import beehive.model.UserData;
 
 @RestController
+@CrossOrigin()
 @RequestMapping(path = "/beehives")
 public class ContollerClass {
 
@@ -21,8 +24,8 @@ public class ContollerClass {
 	Services userservice;
 
 	@PostMapping(path = "/login", consumes = "application/json", produces = "application/json")
-	public ResponseEntity<Object> loginUser(@RequestBody User user) {
-		return userservice.login(user);
+	public UserDetails loginUser(@RequestBody User user) {
+		return userservice.login(user.getEmail());
 	}
 
 	@PutMapping("/registeruser")

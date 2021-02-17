@@ -5,7 +5,7 @@ import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-view-beehive',
   templateUrl: './view-beehive.component.html',
-  styleUrls: ['./view-beehive.component.css']
+  styleUrls: ['../login-user/login-user.component.css', '../../assets/css/style.css']
 })
 export class ViewBeehiveComponent implements OnInit {
 

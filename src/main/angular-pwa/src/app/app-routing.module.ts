@@ -9,6 +9,7 @@ import { BeehiveTemperatureComponent } from './beehive-temperature/beehive-tempe
 import { CheckMailComponent } from './check-mail/check-mail.component';
 import { ConfirmUserComponent } from './confirm-user/confirm-user.component';
 import { AuthGuard } from './guards/auth.guard';
+import { AppComponent } from './app.component';
 
 const routes: Routes = [
   { path: 'loginuser', component: LoginUserComponent },

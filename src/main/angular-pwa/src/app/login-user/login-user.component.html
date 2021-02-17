@@ -1,30 +1,50 @@
-<div class="row">
-  <div class="col-md-12">
-    <div class="card bg-dark my-5">
-      <div class="card-body">
-        <h2 class="card-title text-center text-white py-3">Welcome to Beehive</h2>
-        <ul class="text-center list-inline py-3">
-          <li class="list-inline-item"><a routerLink="/loginuser" class="btn btn-info"> Login</a></li>
-          <li class="list-inline-item"><a routerLink="/adduser" class="btn btn-info">Register Now</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="card-body">
-      <form (ngSubmit)="onSubmit()" #userForm="ngForm">
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="text" [(ngModel)]="userlogin.email" class="form-control" id="email" name="email"
-            placeholder="Enter your email address" required #email="ngModel">
-          <div [hidden]="!email.pristine" class="alert alert-danger">Email is required</div>
+
+      <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center">
+    <div class="container">
+      <div class="header-container d-flex align-items-center">
+        <div class="logo mr-auto">
+          <h1 class="text-light"><a href="index.html"><span>Beehive</span></a></h1>
+          <!-- Uncomment below if you prefer to use an image logo -->
+          <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
         </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" [(ngModel)]="userlogin.password" class="form-control" id="Password" name="password"
-            placeholder="Enter your name" required #name="ngModel">
-        </div>
-        <div [hidden]="!name.pristine" class="alert alert-danger">Password is required</div>
-        <button type="submit" [disabled]="!userForm.form.valid" class="btn btn-info">Submit</button>
-      </form>
+        <nav class="nav-menu d-none d-lg-block">
+          <ul>
+            <li class="get-started"><a routerLink="/loginuser" (click)="updateState()">Login</a></li>
+          </ul>
+        </nav><!-- .nav-menu -->
+      </div><!-- End Header Container -->
     </div>
-  </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex align-items-center">
+    <div class="container text-center position-relative" data-aos="fade-in" data-aos-delay="200">
+      <h1>Sign up to visually analyze beehive data</h1>
+      <a routerLink="/adduser" class="btn-get-started scrollto" (click)="toregister()">Register Now</a>
+    </div>
+  </section><!-- End Hero -->
+
+
+
+
+<div class="modal" [style.display]="state">
+  <form class="modal-content animate" (ngSubmit)="onSubmit()" #userForm="ngForm">
+    <div class="imgcontainer">
+      <span (click)="cancel()" class="close" title="Close">&times;</span>
+    </div>
+
+    <div class="container">
+      <label for="uname"><b>Username</b></label>
+      <input type="text" [(ngModel)]="userlogin.email" class="form-control" id="email" name="email"
+        placeholder="Enter your email address" required #email="ngModel">
+
+      <label for="psw"><b>Password</b></label>
+      <input type="password" [(ngModel)]="userlogin.password" class="form-control" id="Password" name="password"
+        placeholder="Enter your password" required #name="ngModel">
+
+      <button type="submit" [disabled]="!userForm.form.valid" class="btn btn-info">Submit</button>
+      <button type="button" (click)="cancel()" class="cancelbtn">Cancel</button>
+    </div>
+  </form>
 </div>

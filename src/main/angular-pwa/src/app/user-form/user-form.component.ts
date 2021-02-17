@@ -4,19 +4,23 @@ import { UserService } from '../service/user.service';
 import { ToasterService } from '../toaster/toaster.service';
 import { User } from '../model/user';
 import { HttpResponse } from '@angular/common/http';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-user-form',
   templateUrl: './user-form.component.html',
-  styleUrls: ['./user-form.component.css']
+  styleUrls: ['./user-form.component.css', '../../assets/css/style.css']
 })
-export class UserFormComponent {
+export class UserFormComponent implements OnInit {
 
   user: User;
+  state: string;
 
   constructor(private route: ActivatedRoute, private router: Router, private toaster: ToasterService, private userService: UserService) {
     this.user = new User();
+  }
+
+  ngOnInit() {
+    this.state=localStorage.getItem("dis");
   }
 
   // tslint:disable-next-line: typedef
@@ -38,9 +42,22 @@ export class UserFormComponent {
   gotoUserList(response: HttpResponse<Object>) {
     if (response.status == 200) {
       this.toaster.showToast('Success', 'Mail sent', 'success');
-      this.router.navigate(['/checkmail'])
+      this.toaster.showToast('Success', 'Account registered', 'success');
+      this.router.navigate(['/loginuser'])
     } else {
       this.toaster.showToast('Failure', 'UserName already exists', 'failure');
     }
+  }
+
+  cancel() {
+    this.state = 'none';
+  }
+
+  updateState() {
+    this.state = 'block';
+  }
+
+  tologin() {
+    localStorage.setItem("dis","block");
   }
 }

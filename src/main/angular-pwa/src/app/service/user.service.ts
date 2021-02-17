@@ -25,9 +25,19 @@ export class UserService {
 
   // tslint:disable-next-line: typedef
   public loginuser(userlogin: UserLogin) {
-    return this.http.post<UserLogin>(this.login, userlogin, {observe: 'response'}).pipe(map(response => {
+      return this.http.post<UserLogin>(this.login, userlogin, {observe: 'response'}).pipe(map(response => {
       return response; }));
   }
+
+  public authenticate(username:string, password:string) {
+		return this.http.post<any>('http://localhost:8080/authenticate', { username, password },{observe: 'response'}).pipe(
+			map((userData) => {
+					return userData;
+				}
+			)
+
+		);
+	}
 
    // tslint:disable-next-line: typedef
   public confirmuser(token: string) {

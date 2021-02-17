@@ -2,8 +2,7 @@ package beehive;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -18,12 +17,15 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 
+import org.springframework.security.core.userdetails.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import beehive.model.SuccessLogin;
-import beehive.model.User;
 import beehive.model.UserData;
 import beehive.model.UserRegister;
 import beehive.repository.UserRepository;
@@ -36,29 +38,34 @@ public class UserService implements Services {
 	@Autowired
 	private UserRepository reps;
 
+	BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+	
 	private List<UserRegister> local;
 	private Iterator<UserRegister> itr;
 
 	@Override
-	public ResponseEntity<Object> login(User user) {
+	public UserDetails login(String username) {
 		boolean status = false;
-		SuccessLogin resp = null;
+		String email="";
+		String password="";
 		local = reps.findAll();
 		itr = local.iterator();
 		while (itr.hasNext()) {
 			UserRegister udata = itr.next();
-			String email = udata.getEmail();
-			String password = udata.getPassword();
+			 email = udata.getEmail();
+			 password = udata.getPassword();
 			if (udata.isEnabled()) {
-				if (user.getEmail().equalsIgnoreCase(email) && user.getPassword().equals(password)) {
+				if (email.equalsIgnoreCase(username)) {
 					status = true;
+					break;
 				}
 			}
 		}
 		if (status) {
-			return ResponseEntity.ok(resp);
+			return new User(username, password,
+					new ArrayList<>());
 		} else {
-			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new UsernameNotFoundException("User not found with username: " + username);
 		}
 	}
 
@@ -107,14 +114,15 @@ public class UserService implements Services {
 		UserRegister data = new UserRegister();
 		data.setEmail(userdata.getEmail());
 		data.setName(userdata.getName());
-		data.setPassword(userdata.getPassword());
-		data.setEnabled(false);
+		data.setPassword(encoder.encode(userdata.getPassword()));
+		data.setEnabled(true);
 		data.setTime(sdf.format(timestamp));
 		data.setToken(token);
 		String url = "http://localhost:8080/confirmuser?token=" + token;
+		reps.save(data);
 		try {
-			sendMail(url, data);
-			reps.save(data);
+//			sendMail(url, data);
+//			reps.save(data);
 			return ResponseEntity.status(200).build();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -140,10 +148,11 @@ public class UserService implements Services {
 		String host = "smtp.mail.yahoo.com";
 		Properties properties = System.getProperties();
 		properties.put("mail.smtp.host", host);
-		properties.put("mail.smtp.port", "587");
-		properties.put("mail.smtp.starttls.enable", "true");
+		properties.put("mail.smtp.port", "465");
 		properties.put("mail.smtp.auth", "true");
-
+		properties.put("mail.smtp.ssl.enable","true");
+		properties.put("mail.smtp.ssl.trust", "*");
+		
 		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication("chandeesh64@yahoo.com", "sepxlqetqtiacptu");
