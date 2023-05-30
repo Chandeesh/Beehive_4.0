@@ -1,5 +1,7 @@
-package beehive;
+package beehive.config;
 
+import beehive.config.jwt.JwtAuthenticationEntryPoint;
+import beehive.config.jwt.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -61,7 +63,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/swagger-ui.html",
                         "/webjars/**",
                         "/beehives/registeruser",
-                        "/index.html","/","/home","/loginuser","/adduser","/assets/**"
+                        "/beehives/confirmuser",
+                        "/index.html","/","/home","/loginuser","/adduser","/checkmail","/confirmuser","/assets/**"
                         ,"/*.js","/*.css","/*.jpg","/*.webmanifest").permitAll().antMatchers(HttpMethod.OPTIONS, "/**")
 				.permitAll().
 				// all other requests need to be authenticated

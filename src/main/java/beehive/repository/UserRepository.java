@@ -1,7 +1,7 @@
 package beehive.repository;
 
+import beehive.model.user.UserRegister;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import beehive.model.UserRegister;
 
 public interface UserRepository extends MongoRepository<UserRegister,String>{
 

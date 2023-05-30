@@ -1,42 +1,31 @@
-package beehive;
+package beehive.service.user;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
-
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-
-import org.springframework.security.core.userdetails.User;
+import beehive.model.user.UserData;
+import beehive.model.user.UserRegister;
+import beehive.repository.UserRepository;
+import beehive.util.SendEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import beehive.model.SuccessLogin;
-import beehive.model.UserData;
-import beehive.model.UserRegister;
-import beehive.repository.UserRepository;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
-public class UserService implements Services {
+public class UserServiceImpl implements Services {
 
 	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss");
 
 	@Autowired
 	private UserRepository reps;
+
+	@Autowired
+	private SendEmail sendEmail;
 
 	BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 	
@@ -108,6 +97,8 @@ public class UserService implements Services {
 				return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			} else if(existingdata.getEmail().equals(userdata.getEmail()) && getHours(existingdata.getTime())>24){
 				reps.delete(existingdata);
+			} else {
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
 		String token = UUID.randomUUID().toString();
@@ -118,48 +109,15 @@ public class UserService implements Services {
 		data.setEnabled(true);
 		data.setTime(sdf.format(timestamp));
 		data.setToken(token);
-		String url = "http://localhost:8080/confirmuser?token=" + token;
-		reps.save(data);
+		String url = "http://localhost:8080/#/confirmuser?token=" + token;
 		try {
-//			sendMail(url, data);
-//			reps.save(data);
+			sendEmail.triggerMail(url, data);
+			reps.save(data);
 			return ResponseEntity.status(200).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-	}
-
-	private void sendMail(String url, UserRegister data) {
-		try {
-			MimeMessage message = new MimeMessage(javaMailService());
-			message.setFrom(new InternetAddress("chandeesh64@yahoo.com"));
-			message.addRecipient(Message.RecipientType.TO, new InternetAddress(data.getEmail()));
-			message.setSubject("Activation Link");
-			message.setText(url);
-			Transport.send(message);
-		} catch (MessagingException ex) {
-			throw new NullPointerException();
-		}
-	}
-
-	public Session javaMailService() {
-
-		String host = "smtp.mail.yahoo.com";
-		Properties properties = System.getProperties();
-		properties.put("mail.smtp.host", host);
-		properties.put("mail.smtp.port", "465");
-		properties.put("mail.smtp.auth", "true");
-		properties.put("mail.smtp.ssl.enable","true");
-		properties.put("mail.smtp.ssl.trust", "*");
-		
-		Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
-			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication("chandeesh64@yahoo.com", "sepxlqetqtiacptu");
-			}
-		});
-		session.setDebug(true);
-		return session;
 	}
 
 	public long getHours(String date) {

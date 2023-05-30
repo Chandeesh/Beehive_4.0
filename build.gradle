@@ -6,10 +6,6 @@
  * user guide available at https://docs.gradle.org/4.10.2/userguide/java_library_plugin.html
  */
 buildscript {
-	
-	repositories {
-	 jcenter()
-	 }
 	 dependencies {
 		 classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.10.RELEASE")
 	  	}
@@ -35,23 +31,26 @@ dependencies {
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-parent
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '2.1.10.RELEASE', ext: 'pom'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.10.RELEASE'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.2.1.RELEASE'
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-rest', version: '2.2.1.RELEASE'
-    compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.6.1'
-    compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.6.1'
-    compile group: 'javax.mail', name: 'mail', version: '1.5.0-b01'
-	compile group: 'org.springframework.boot', name: 'spring-boot-actuator', version: '2.2.6.RELEASE'
-	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '2.2.6.RELEASE'
-	compile group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.2.6.RELEASE'
+	api group: 'org.springframework.boot', name: 'spring-boot-starter-parent', version: '2.1.10.RELEASE', ext: 'pom'
+	api group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.10.RELEASE'
+	testImplementation 'org.testng:testng:7.1.0'
+	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.2.1.RELEASE'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-rest', version: '2.2.1.RELEASE'
+	api group: 'io.springfox', name: 'springfox-swagger2', version: '2.6.1'
+	api group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.6.1'
+	api group: 'javax.mail', name: 'mail', version: '1.5.0-b01'
+	api group: 'org.springframework.boot', name: 'spring-boot-actuator', version: '2.2.6.RELEASE'
+	api group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '2.2.6.RELEASE'
+	api group: 'org.springframework.boot', name: 'spring-boot-starter-mail', version: '2.2.6.RELEASE'
+	api group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.2.6.RELEASE'
+	api group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 }
 
 // In this section you declare where to find the dependencies of your project
 repositories {
     // Use jcenter for resolving your dependencies.
     //https:/mvnrepository.com/artifact/org.springframework.boot
-    jcenter()
+	mavenCentral()
 }
 
 def webappDir = "$projectDir/src/main/angular-pwa"

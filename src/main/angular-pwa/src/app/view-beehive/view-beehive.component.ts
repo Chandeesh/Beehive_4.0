@@ -22,6 +22,7 @@ export class ViewBeehiveComponent implements OnInit {
   logout() {
     this.authService.logout();
     this.router.navigate(['/loginuser']);
+    sessionStorage.removeItem("JWT");
   }
 
   weight() {

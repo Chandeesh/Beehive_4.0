@@ -1,4 +1,4 @@
-package beehive.model;
+package beehive.model.jwt;
 
 import java.io.Serializable;
 

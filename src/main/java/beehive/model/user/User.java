@@ -1,4 +1,4 @@
-package beehive.model;
+package beehive.model.user;
 
 public class User {
 

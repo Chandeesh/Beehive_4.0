@@ -12,9 +12,9 @@ export class UserService {
   private confirm: string;
   
   constructor(private http: HttpClient) {
-    this.login = 'http://localhost:8080/beehives/login';
-    this.register = 'http://localhost:8080/beehives/registeruser';
-    this.confirm = 'http://localhost:8080/beehives/confirmuser?token=';
+    this.login = 'http://192.168.0.100:8080/beehives/login';
+    this.register = 'http://192.168.0.100:8080/beehives/registeruser';
+    this.confirm = 'http://192.168.0.100:8080/beehives/confirmuser?token=';
   }
 
   // tslint:disable-next-line: typedef
@@ -30,7 +30,7 @@ export class UserService {
   }
 
   public authenticate(username:string, password:string) {
-		return this.http.post<any>('http://localhost:8080/authenticate', { username, password },{observe: 'response'}).pipe(
+		return this.http.post<any>('http://192.168.0.100:8080/authenticate', { username, password },{observe: 'response'}).pipe(
 			map((userData) => {
 					return userData;
 				}
